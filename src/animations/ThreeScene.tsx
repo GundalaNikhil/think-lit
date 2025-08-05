@@ -7,6 +7,7 @@ export const ThreeScene = () => {
 
   useEffect(() => {
     if (!mountRef.current) return;
+    const container = mountRef.current;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -143,21 +144,19 @@ export const ThreeScene = () => {
     camera.position.z = 15;
 
     // Animation loop
-    let animationId: number | null = null;
+    let animationId: number;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-
+      // 🌀 Rotations & movements
       shapes.forEach((shape, index) => {
         shape.rotation.x += 0.005 * (index % 2 === 0 ? 1 : -1);
         shape.rotation.y += 0.009 * (index % 3 === 0 ? 1 : -1);
         shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.012;
-        // Animate outline if exists
         if (outlineMeshes[index]) {
           outlineMeshes[index].rotation.copy(shape.rotation);
           outlineMeshes[index].position.copy(shape.position);
         }
       });
-      // Floating lightbulbs drift
       bulbs.forEach((bulb, i) => {
         bulb.position.y += Math.sin(Date.now() * 0.0015 + i * 1.1) * 0.009;
         bulb.rotation.y += 0.01;
@@ -169,22 +168,18 @@ export const ThreeScene = () => {
 
     // Resize handler
     const handleResize = () => {
-      if (!mountRef.current) return;
-      camera.aspect =
-        mountRef.current.clientWidth / mountRef.current.clientHeight;
+      camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(
-        mountRef.current.clientWidth,
-        mountRef.current.clientHeight
-      );
+      renderer.setSize(container.clientWidth, container.clientHeight);
     };
     window.addEventListener("resize", handleResize);
 
+    // ✅ Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
-      animationId && cancelAnimationFrame(animationId);
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (animationId) cancelAnimationFrame(animationId); // ✅ fixed
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
       }
       renderer.dispose();
     };

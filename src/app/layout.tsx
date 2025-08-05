@@ -1,4 +1,3 @@
-import Navbar from "@/components/HomePage/Navbar/Navbar";
 import "./globals.css";
 
 export default function RootLayout({
@@ -8,7 +7,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <Navbar /> */}
       <body>{children}</body>
     </html>
   );

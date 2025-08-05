@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { words } from "../components/constants/AnimationConstants";
 
 export const TypewriterAnimation = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-
-  const words = ["Innovate", "Create", "Excel", "Learn", "Build", "Grow"];
 
   useEffect(() => {
     const currentWord = words[currentWordIndex];
@@ -39,7 +38,7 @@ export const TypewriterAnimation = () => {
     );
 
     return () => clearTimeout(timeout);
-  }, [currentText, isDeleting, isPaused, currentWordIndex, words]);
+  }, [currentText, isDeleting, isPaused, currentWordIndex]);
 
   return (
     <div className="flex items-center justify-center">

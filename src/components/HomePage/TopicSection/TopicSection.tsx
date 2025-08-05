@@ -1,13 +1,4 @@
-import {
-  ArrowRight,
-  Brain,
-  Code,
-  Database,
-  Globe,
-  Layers,
-  Sparkles,
-  Star,
-} from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { topics } from "../../constants/Topics";
 
 export const LearningTopicsSection = () => {
@@ -25,7 +16,7 @@ export const LearningTopicsSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {topics.map((topic, index) => (
+          {topics.map((topic) => (
             <div
               key={topic.id}
               className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100 overflow-hidden"
@@ -56,7 +47,7 @@ export const LearningTopicsSection = () => {
 
                 <div className="space-y-2 mb-6">
                   <p className="text-sm font-medium text-gray-700">
-                    What you'll get:
+                    What you&apos;ll get:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {topic.features.map((feature, idx) => (
