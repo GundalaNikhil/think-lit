@@ -4,38 +4,19 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import { Topic } from "@/types/topic";
+import { formatDate } from "@/utils/date";
+import { getDifficultyConfig } from "@/utils/difficulty";
 
-interface Topic {
-  id: number;
-  title: string;
-  slug: string;
-  introduction: Array<{
-    type: string;
-    children?: Array<{ text?: string }>;
-  }>;
-  description: Array<{
-    type: string;
-    children?: Array<{ text?: string }>;
-    level?: number;
-  }>;
-  tags: string;
-  difficulty_level: string;
-  created: string;
-  image: Array<{
-    url: string;
-    alternativeText?: string;
-    formats?: {
-      thumbnail?: { url: string };
-      small?: { url: string };
-      medium?: { url: string };
-      large?: { url: string };
-    };
-  }>;
+interface TopicCardProps {
+  topic: Topic;
 }
 
-const TopicCard = ({ topic }: { topic: Topic }) => {
+const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
   const {
-    id,
     title,
     slug,
     introduction,
@@ -53,36 +34,15 @@ const TopicCard = ({ topic }: { topic: Topic }) => {
     return paragraph?.children?.[0]?.text || "";
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getDifficultyColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "beginner":
-        return "from-green-500 to-emerald-500";
-      case "intermediate":
-        return "from-yellow-500 to-orange-500";
-      case "advanced":
-        return "from-red-500 to-pink-500";
-      default:
-        return "from-blue-500 to-purple-500";
-    }
-  };
-
+  const difficultyConfig = getDifficultyConfig(difficulty_level);
   const descText =
     getDescriptionText(description) || getDescriptionText(introduction);
-  const difficultyColor = getDifficultyColor(difficulty_level);
 
   return (
-    <Link href={`/topics/${slug || id}`}>
-      <div className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100 overflow-hidden cursor-pointer h-full">
+    <Link href={`/topics/${slug || topic.id}`}>
+      <Card hover className="h-full cursor-pointer overflow-hidden">
         {/* Difficulty indicator bar */}
-        <div className={`h-2 bg-gradient-to-r ${difficultyColor}`}></div>
+        <div className={`h-2 bg-gradient-to-r ${difficultyConfig.gradient}`} />
 
         {/* Image */}
         {image && image.length > 0 && (
@@ -96,11 +56,13 @@ const TopicCard = ({ topic }: { topic: Topic }) => {
               fill
             />
             <div className="absolute top-4 right-4">
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r ${difficultyColor}`}
+              <Badge
+                variant="primary"
+                size="sm"
+                className="bg-white/90 text-gray-800 backdrop-blur-sm"
               >
-                {difficulty_level || "General"}
-              </span>
+                {difficultyConfig.label}
+              </Badge>
             </div>
           </div>
         )}
@@ -123,12 +85,9 @@ const TopicCard = ({ topic }: { topic: Topic }) => {
               <Tag className="w-4 h-4 text-gray-500" />
               <div className="flex flex-wrap gap-1">
                 {tags.split(",").map((tag: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
-                  >
+                  <Badge key={idx} variant="default" size="sm">
                     {tag.trim()}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -141,17 +100,19 @@ const TopicCard = ({ topic }: { topic: Topic }) => {
           </div>
 
           {/* CTA Button */}
-          <div
-            className={`w-full bg-gradient-to-r ${difficultyColor} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:translate-y-[-2px]`}
+          <Button
+            variant="primary"
+            size="lg"
+            className={`w-full bg-gradient-to-r ${difficultyConfig.gradient} hover:shadow-lg transition-all duration-300 group-hover:translate-y-[-2px]`}
           >
             Start Learning
             <ArrowRight
               size={16}
               className="group-hover:translate-x-1 transition-transform"
             />
-          </div>
+          </Button>
         </div>
-      </div>
+      </Card>
     </Link>
   );
 };

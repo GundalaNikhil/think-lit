@@ -1,77 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { BookOpen, Loader2, ArrowRight } from "lucide-react";
-import TopicCard from "./TopicCard";
+import React from "react";
+import { BookOpen, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
-interface Topic {
-  id: number;
-  title: string;
-  slug: string;
-  introduction: Array<{
-    type: string;
-    children?: Array<{ text?: string }>;
-  }>;
-  description: Array<{
-    type: string;
-    children?: Array<{ text?: string }>;
-    level?: number;
-  }>;
-  tags: string;
-  difficulty_level: string;
-  created: string;
-  image: Array<{
-    url: string;
-    alternativeText?: string;
-    formats?: {
-      thumbnail?: { url: string };
-      small?: { url: string };
-      medium?: { url: string };
-      large?: { url: string };
-    };
-  }>;
-}
+import TopicCard from "./TopicCard";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Button from "@/components/ui/Button";
+import { useTopics } from "@/hooks/useTopics";
 
 const Topics = () => {
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
-  const fetchTopics = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        "http://localhost:1337/api/topics?populate=*"
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch topics");
-      }
-
-      const data = await response.json();
-      setTopics(data.data);
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An unknown error occurred";
-      setError(errorMessage);
-      console.error("Error fetching topics:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { topics, loading, error, refetch } = useTopics();
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-          <p className="text-gray-600">Loading topics...</p>
-        </div>
+        <LoadingSpinner size="lg" text="Loading topics..." />
       </div>
     );
   }
@@ -79,14 +22,32 @@ const Topics = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Error: {error}</p>
-          <button
-            onClick={fetchTopics}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6">
+            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+              <svg
+                className="w-8 h-8 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Failed to load topics
+            </h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+          </div>
+
+          <Button onClick={refetch} variant="primary" className="w-full">
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -105,12 +66,11 @@ const Topics = () => {
             topic includes detailed articles, interactive content, quizzes, and
             practical examples.
           </p>
-          <Link
-            href="/topics"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-          >
-            View All Topics
-            <ArrowRight size={20} />
+          <Link href="/topics">
+            <Button size="lg" className="inline-flex items-center gap-2">
+              View All Topics
+              <ArrowRight size={20} />
+            </Button>
           </Link>
         </div>
 

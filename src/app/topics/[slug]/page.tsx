@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Loader2, Calendar, Tag, BookOpen } from "lucide-react";
+import { ArrowLeft, Loader2, Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import CodeExample from "../../../components/Contents/CodeExample";
@@ -106,12 +106,6 @@ const TopicPage = () => {
     return paragraph?.children?.[0]?.text || "";
   };
 
-  const getDescriptionText = (desc: Topic["description"]) => {
-    if (!desc || !Array.isArray(desc)) return "";
-    const paragraph = desc.find((item) => item.type === "paragraph");
-    return paragraph?.children?.[0]?.text || "";
-  };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -163,7 +157,6 @@ const TopicPage = () => {
   }
 
   const introText = getIntroductionText(topic.introduction);
-  const descriptionText = getDescriptionText(topic.description);
   const difficultyColor = getDifficultyColor(topic.difficulty_level);
 
   return (

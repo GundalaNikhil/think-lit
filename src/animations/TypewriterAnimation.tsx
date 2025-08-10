@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { words } from "../components/constants/AnimationConstants";
 
 export const TypewriterAnimation = () => {
@@ -8,8 +8,10 @@ export const TypewriterAnimation = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const memoizedWords = useMemo(() => words, []);
+
   useEffect(() => {
-    const currentWord = words[currentWordIndex];
+    const currentWord = memoizedWords[currentWordIndex];
 
     const timeout = setTimeout(
       () => {
@@ -24,7 +26,7 @@ export const TypewriterAnimation = () => {
 
           if (currentText === "") {
             setIsDeleting(false);
-            setCurrentWordIndex((prev) => (prev + 1) % words.length);
+            setCurrentWordIndex((prev) => (prev + 1) % memoizedWords.length);
           }
         } else {
           setCurrentText(currentWord.substring(0, currentText.length + 1));
@@ -38,7 +40,7 @@ export const TypewriterAnimation = () => {
     );
 
     return () => clearTimeout(timeout);
-  }, [currentText, isDeleting, isPaused, currentWordIndex]);
+  }, [currentText, isDeleting, isPaused, currentWordIndex, memoizedWords]);
 
   return (
     <div className="flex items-center justify-center">

@@ -6,25 +6,22 @@ export const ThreeScene = () => {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!mountRef.current) return;
     const container = mountRef.current;
+    if (!container) return;
 
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
-      mountRef.current.clientWidth / mountRef.current.clientHeight,
+      container.clientWidth / container.clientHeight,
       0.1,
       1000
     );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
-    renderer.setSize(
-      mountRef.current.clientWidth,
-      mountRef.current.clientHeight
-    );
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x00061a, 0.8); // subtle navy background
-    mountRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     // Starfield background
     const starGeometry = new THREE.BufferGeometry();
@@ -177,8 +174,8 @@ export const ThreeScene = () => {
     // ✅ Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (animationId) cancelAnimationFrame(animationId); // ✅ fixed
-      if (container.contains(renderer.domElement)) {
+      if (animationId) cancelAnimationFrame(animationId);
+      if (container && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
