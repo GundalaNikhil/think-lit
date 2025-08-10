@@ -1,5 +1,6 @@
 import { ArrowRight, Star } from "lucide-react";
 import { topics } from "../../constants/Topics";
+import Link from "next/link";
 
 export const LearningTopicsSection = () => {
   return (
@@ -61,12 +62,21 @@ export const LearningTopicsSection = () => {
                   </div>
                 </div>
 
-                <button
-                  className={`w-full bg-gradient-to-r ${topic.color} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:translate-y-[-2px]`}
-                >
-                  {topic.id === "more" ? "Stay Tuned" : "Start Learning"}
-                  {topic.id !== "more" && <ArrowRight size={16} />}
-                </button>
+                {topic.id === "more" ? (
+                  <button
+                    className={`w-full bg-gradient-to-r ${topic.color} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:translate-y-[-2px]`}
+                  >
+                    Stay Tuned
+                  </button>
+                ) : (
+                  <Link
+                    href="/topics"
+                    className={`w-full bg-gradient-to-r ${topic.color} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:translate-y-[-2px]`}
+                  >
+                    Start Learning
+                    <ArrowRight size={16} />
+                  </Link>
+                )}
               </div>
             </div>
           ))}
@@ -76,9 +86,12 @@ export const LearningTopicsSection = () => {
           <p className="text-gray-600 mb-6">
             Ready to start your learning journey?
           </p>
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full text-lg font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl">
+          <Link
+            href="/topics"
+            className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full text-lg font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
             Browse All Topics
-          </button>
+          </Link>
         </div>
       </div>
     </section>
