@@ -1,8 +1,8 @@
 "use client";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
 
-export const ThreeScene = () => {
+export const ThreeScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

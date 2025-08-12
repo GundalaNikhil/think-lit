@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import { Code } from "lucide-react";
+import { useState } from "react";
+import { Code, Copy, Check } from "lucide-react";
 
-const CodeExample = ({ code }: { code: string }) => {
+interface CodeExampleProps {
+  code: string;
+}
+
+const CodeExample: React.FC<CodeExampleProps> = ({ code }) => {
   const [copied, setCopied] = useState(false);
-
-  // Clean up the code string - remove markdown and extra formatting
-  const cleanCode = code?.replace(/```/g, "").replace(/Drag/g, "").trim() || "";
+  const cleanCode = code?.replace(/```/g, "").trim() || "";
 
   const copyToClipboard = async () => {
     try {
@@ -15,26 +17,38 @@ const CodeExample = ({ code }: { code: string }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy code : " + err);
+      console.error("Failed to copy code:", err);
     }
   };
 
   return (
-    <div className="bg-gray-900 rounded-xl overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-800">
-        <div className="flex items-center gap-2">
-          <Code size={16} className="text-gray-400" />
-          <span className="text-sm text-gray-400">Code Example</span>
+    <div className="bg-gray-900 rounded-3xl overflow-hidden shadow-2xl mb-12 hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] animate-fadeInUp">
+      <div className="flex items-center justify-between px-8 py-6 bg-gradient-to-r from-gray-800 to-gray-900">
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+          <Code size={24} className="text-blue-400" />
+          <span className="text-sm text-gray-300 font-['Space_Grotesk'] font-semibold">
+            Code Example
+          </span>
         </div>
         <button
           onClick={copyToClipboard}
-          className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition-colors"
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 font-['Space_Grotesk'] font-bold transform hover:scale-105 ${
+            copied
+              ? "bg-green-600 text-white"
+              : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+          }`}
         >
-          {copied ? "Copied!" : "Copy"}
+          {copied ? <Check size={18} /> : <Copy size={18} />}
+          {copied ? "Copied!" : "Copy Code"}
         </button>
       </div>
-      <pre className="p-4 text-sm text-gray-300 overflow-x-auto">
-        <code>{cleanCode}</code>
+      <pre className="p-8 text-sm text-gray-300 overflow-x-auto font-mono leading-relaxed">
+        <code className="language-javascript">{cleanCode}</code>
       </pre>
     </div>
   );
