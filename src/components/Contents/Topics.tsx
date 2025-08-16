@@ -104,12 +104,10 @@ const Topics = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-6 bg-white/90 backdrop-blur-xl rounded-3xl p-16 shadow-2xl border border-white/50">
-          <Loader2 className="w-16 h-16 animate-spin text-blue-600" />
-          <p className="text-gray-600 text-xl font-['Inter']">
-            Loading amazing topics...
-          </p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 bg-white rounded-md p-8 shadow-sm border border-gray-200">
+          <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+          <p className="text-gray-600 font-inter">Loading topics...</p>
         </div>
       </div>
     );
@@ -117,17 +115,15 @@ const Topics = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 flex items-center justify-center">
-        <div className="text-center bg-white/90 backdrop-blur-xl rounded-3xl p-16 shadow-2xl border border-white/50">
-          <div className="text-8xl mb-6">😕</div>
-          <p className="text-red-600 mb-6 text-xl font-['Inter']">
-            Oops! {error}
-          </p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center bg-white rounded-md p-8 shadow-sm border border-gray-200">
+          <div className="text-4xl mb-4">😕</div>
+          <p className="text-gray-600 mb-6 font-inter">Oops! {error}</p>
           <button
             onClick={fetchTopics}
-            className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-2xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 font-['Space_Grotesk'] font-bold transform hover:scale-105 shadow-xl"
+            className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors font-space-grotesk font-medium text-sm"
           >
-            Try Again 🔄
+            Try Again
           </button>
         </div>
       </div>
@@ -137,7 +133,7 @@ const Topics = () => {
   const difficultyStats = getDifficultyStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-white">
       <style>{`
         .animate-fadeInUp {
           animation: fadeInUp 0.8s ease-out forwards;
@@ -184,55 +180,55 @@ const Topics = () => {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Header Section */}
-        <div className="text-center mb-16 animate-fadeInUp">
-          <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl shadow-lg mb-8 animate-bounce-gentle">
-            <BookOpen size={32} />
-            <h1 className="text-3xl font-black font-['Space_Grotesk']">
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <BookOpen size={24} className="text-gray-700" />
+            <h1 className="text-3xl font-space-grotesk font-bold text-gray-900">
               Learning Topics
             </h1>
           </div>
-          <h2 className="text-5xl font-black mb-6 font-['Space_Grotesk'] bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-space-grotesk font-semibold mb-4 text-gray-800">
             Master Programming Concepts
           </h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 font-['Inter'] leading-relaxed">
+          <p className="text-gray-600 max-w-3xl font-inter leading-relaxed">
             Explore our comprehensive collection of programming topics. Each
             topic includes detailed articles, interactive content, quizzes, and
             practical examples to accelerate your learning journey.
           </p>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-blue-600 mb-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-3xl">
+            <div className="bg-white border border-gray-200 rounded-md p-4 text-center shadow-sm">
+              <div className="text-2xl font-bold text-gray-900 mb-1">
                 {topics.length}
               </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
+              <div className="text-xs font-space-grotesk font-medium text-gray-600">
                 Total Topics
               </div>
             </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-green-600 mb-2">
+            <div className="bg-white border border-gray-200 rounded-md p-4 text-center shadow-sm">
+              <div className="text-2xl font-bold text-gray-900 mb-1">
                 {difficultyStats.beginner || 0}
               </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
+              <div className="text-xs font-space-grotesk font-medium text-gray-600">
                 Beginner
               </div>
             </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-yellow-600 mb-2">
+            <div className="bg-white border border-gray-200 rounded-md p-4 text-center shadow-sm">
+              <div className="text-2xl font-bold text-gray-900 mb-1">
                 {difficultyStats.intermediate || 0}
               </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
+              <div className="text-xs font-space-grotesk font-medium text-gray-600">
                 Intermediate
               </div>
             </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-red-600 mb-2">
+            <div className="bg-white border border-gray-200 rounded-md p-4 text-center shadow-sm">
+              <div className="text-2xl font-bold text-gray-900 mb-1">
                 {difficultyStats.advanced || 0}
               </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
+              <div className="text-xs font-space-grotesk font-medium text-gray-600">
                 Advanced
               </div>
             </div>
@@ -240,28 +236,28 @@ const Topics = () => {
         </div>
 
         {/* Search and Filter Section */}
-        <div className="mb-12 glass-effect rounded-3xl p-8 shadow-xl animate-slideInLeft">
-          <div className="flex flex-col md:flex-row gap-6 items-center">
+        <div className="mb-8 bg-white border border-gray-200 rounded-md p-6 shadow-sm">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="flex-1 relative">
               <Search
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={16}
               />
               <input
                 type="text"
                 placeholder="Search topics by title or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 font-['Inter'] text-lg"
+                className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all duration-200 font-inter"
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              <Filter size={20} className="text-gray-600" />
+            <div className="flex items-center gap-2">
+              <Filter size={16} className="text-gray-600" />
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="px-6 py-4 rounded-2xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 font-['Space_Grotesk'] font-bold bg-white"
+                className="px-3 py-2 rounded-md border border-gray-300 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all duration-200 font-space-grotesk font-medium bg-white text-sm"
               >
                 <option value="all">All Levels</option>
                 <option value="beginner">Beginner</option>
@@ -271,37 +267,33 @@ const Topics = () => {
             </div>
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 font-['Inter']">
+          <div className="mt-4 text-center">
+            <p className="text-gray-600 font-inter text-sm">
               Showing{" "}
-              <span className="font-bold text-blue-600">
+              <span className="font-semibold text-gray-900">
                 {filteredTopics.length}
               </span>{" "}
-              of <span className="font-bold">{topics.length}</span> topics
+              of <span className="font-semibold">{topics.length}</span> topics
             </p>
           </div>
         </div>
 
         {/* Topics Grid */}
         {filteredTopics.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {filteredTopics.map((topic, index) => (
-              <div
-                key={topic.id}
-                className="animate-fadeInUp"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {filteredTopics.map((topic) => (
+              <div key={topic.id}>
                 <TopicCard topic={topic} />
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 animate-fadeInUp">
-            <div className="text-8xl mb-6">🔍</div>
-            <h3 className="text-3xl font-bold text-gray-600 mb-4 font-['Space_Grotesk']">
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2 font-space-grotesk">
               No topics found
             </h3>
-            <p className="text-gray-500 mb-8 font-['Inter'] text-lg">
+            <p className="text-gray-500 mb-6 font-inter">
               Try adjusting your search or filter criteria
             </p>
             <button
@@ -309,31 +301,31 @@ const Topics = () => {
                 setSearchQuery("");
                 setSelectedDifficulty("all");
               }}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 font-['Space_Grotesk'] font-bold transform hover:scale-105 shadow-xl"
+              className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors font-space-grotesk font-medium text-sm"
             >
-              Clear Filters 🔄
+              Clear Filters
             </button>
           </div>
         )}
 
         {/* Quick Navigation */}
         {filteredTopics.length > 0 && (
-          <div className="text-center mt-16 animate-fadeInUp">
-            <div className="glass-effect rounded-3xl p-8 inline-block">
-              <h4 className="text-2xl font-bold text-gray-900 mb-4 font-['Space_Grotesk']">
+          <div className="text-center mt-12 pt-8 border-t border-gray-200">
+            <div className="bg-white rounded-md p-6 border border-gray-200 shadow-sm inline-block">
+              <h4 className="text-lg font-semibold text-gray-900 mb-2 font-space-grotesk">
                 Ready to start learning?
               </h4>
-              <p className="text-gray-600 mb-6 font-['Inter']">
+              <p className="text-gray-600 mb-4 font-inter text-sm">
                 Choose any topic above and begin your programming journey!
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+              <div className="flex flex-wrap justify-center gap-2">
+                <button className="bg-gray-900 text-white px-3 py-1.5 rounded-md hover:bg-gray-800 transition-colors font-space-grotesk font-medium text-xs">
                   Start with Basics
                 </button>
-                <button className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+                <button className="bg-gray-600 text-white px-3 py-1.5 rounded-md hover:bg-gray-700 transition-colors font-space-grotesk font-medium text-xs">
                   Intermediate Level
                 </button>
-                <button className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+                <button className="bg-gray-400 text-white px-3 py-1.5 rounded-md hover:bg-gray-500 transition-colors font-space-grotesk font-medium text-xs">
                   Advanced Topics
                 </button>
               </div>

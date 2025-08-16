@@ -68,31 +68,31 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
     switch (level?.toLowerCase()) {
       case "beginner":
         return {
-          gradient: "from-green-500 to-emerald-500",
-          bg: "bg-green-100",
-          text: "text-green-800",
-          border: "border-green-200",
+          gradient: "from-gray-800 to-gray-900",
+          bg: "bg-gray-100",
+          text: "text-gray-700",
+          border: "border-gray-200",
         };
       case "intermediate":
         return {
-          gradient: "from-yellow-500 to-orange-500",
-          bg: "bg-yellow-100",
-          text: "text-orange-800",
-          border: "border-yellow-200",
+          gradient: "from-gray-700 to-gray-800",
+          bg: "bg-gray-100",
+          text: "text-gray-700",
+          border: "border-gray-200",
         };
       case "advanced":
         return {
-          gradient: "from-red-500 to-pink-500",
-          bg: "bg-red-100",
-          text: "text-red-800",
-          border: "border-red-200",
+          gradient: "from-gray-600 to-gray-700",
+          bg: "bg-gray-100",
+          text: "text-gray-700",
+          border: "border-gray-200",
         };
       default:
         return {
-          gradient: "from-blue-500 to-purple-500",
-          bg: "bg-blue-100",
-          text: "text-blue-800",
-          border: "border-blue-200",
+          gradient: "from-gray-800 to-gray-900",
+          bg: "bg-gray-100",
+          text: "text-gray-700",
+          border: "border-gray-200",
         };
     }
   };
@@ -112,16 +112,12 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
 
   return (
     <Link href={`/topics/${slug || id}`} className="block h-full">
-      <div className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-gray-100 overflow-hidden cursor-pointer h-full transform hover:-translate-y-2">
+      <div className="group relative bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 overflow-hidden cursor-pointer h-full">
         {/* Difficulty indicator bar */}
-        <div
-          className={`h-2 bg-gradient-to-r ${difficultyColor.gradient} relative`}
-        >
-          <div className="absolute inset-0 bg-white/20 group-hover:bg-white/30 transition-all duration-500"></div>
-        </div>
+        <div className="h-1 bg-gray-900"></div>
 
         {/* Image Container */}
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-40 overflow-hidden bg-gray-100">
           {image && image.length > 0 ? (
             <>
               <Image
@@ -130,76 +126,61 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
                 }`}
                 alt={image[0].alternativeText || title}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:from-black/60 transition-all duration-500"></div>
             </>
           ) : (
-            <div
-              className={`w-full h-full bg-gradient-to-br ${difficultyColor.gradient} relative`}
-            >
+            <div className="w-full h-full bg-gray-200 relative">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-6xl text-white/80">📚</div>
+                <div className="text-4xl text-gray-400">📚</div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
             </div>
           )}
 
           {/* Floating Badges */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${difficultyColor.gradient} shadow-lg`}
-            >
+          <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-white bg-gray-900">
               {difficulty_level || "General"}
             </span>
-            <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-              <Clock size={12} className="text-white" />
-              <span className="text-xs text-white font-bold">
-                {readTime} min read
+            <div className="flex items-center gap-1 bg-gray-900 rounded px-2 py-1">
+              <Clock size={10} className="text-white" />
+              <span className="text-xs text-white font-medium">
+                {readTime} min
               </span>
             </div>
           </div>
-
-          {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-600/0 via-purple-600/0 to-purple-600/0 group-hover:from-purple-600/20 group-hover:via-purple-600/10 group-hover:to-purple-600/5 transition-all duration-500"></div>
         </div>
 
-        <div className="p-8 flex flex-col flex-grow">
+        <div className="p-6 flex flex-col flex-grow">
           {/* Title */}
-          <h3 className="text-2xl font-black text-gray-900 mb-4 group-hover:text-purple-600 transition-colors duration-300 font-['Space_Grotesk'] leading-tight">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors duration-200 font-space-grotesk leading-tight">
             {title}
           </h3>
 
           {/* Description */}
-          <p className="text-gray-600 mb-6 line-clamp-3 font-['Inter'] leading-relaxed flex-grow">
+          <p className="text-gray-600 mb-4 line-clamp-3 font-inter leading-relaxed flex-grow text-sm">
             {descText ||
               "Explore this comprehensive programming topic with hands-on examples, interactive content, and practical exercises designed to enhance your coding skills."}
           </p>
 
           {/* Tags */}
           {tags && (
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Tag className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-bold text-gray-700 font-['Space_Grotesk']">
-                  Topics:
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-1">
                 {tags
                   .split(",")
                   .slice(0, 3)
                   .map((tag: string, idx: number) => (
                     <span
                       key={idx}
-                      className={`text-xs ${difficultyColor.bg} ${difficultyColor.text} px-3 py-1 rounded-full font-bold border ${difficultyColor.border} hover:scale-105 transition-transform duration-200`}
+                      className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded font-medium border border-gray-200"
                     >
                       {tag.trim()}
                     </span>
                   ))}
                 {tags.split(",").length > 3 && (
-                  <span className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-bold border border-gray-200">
-                    +{tags.split(",").length - 3} more
+                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium border border-gray-200">
+                    +{tags.split(",").length - 3}
                   </span>
                 )}
               </div>
@@ -207,40 +188,32 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
           )}
 
           {/* Metadata */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center text-sm text-gray-500 font-['Inter']">
-              <Calendar className="w-4 h-4 mr-2" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center text-xs text-gray-500 font-inter">
+              <Calendar className="w-3 h-3 mr-1" />
               {formatDate(created)}
             </div>
             <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <Star className="w-4 h-4 text-gray-300" />
-              <span className="text-xs text-gray-500 ml-1 font-bold">4.0</span>
+              <Star className="w-3 h-3 text-gray-400 fill-current" />
+              <Star className="w-3 h-3 text-gray-400 fill-current" />
+              <Star className="w-3 h-3 text-gray-400 fill-current" />
+              <Star className="w-3 h-3 text-gray-400 fill-current" />
+              <Star className="w-3 h-3 text-gray-300" />
+              <span className="text-xs text-gray-500 ml-1 font-medium">
+                4.0
+              </span>
             </div>
           </div>
 
           {/* CTA Button */}
-          <button
-            className={`w-full bg-gradient-to-r ${difficultyColor.gradient} text-white py-4 rounded-2xl font-bold hover:shadow-2xl transition-all duration-500 flex items-center justify-center gap-3 group-hover:translate-y-[-2px] relative overflow-hidden mt-auto`}
-          >
-            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-500"></div>
-            <span className="relative z-10 font-['Space_Grotesk'] text-lg">
-              Start Learning
-            </span>
+          <button className="w-full bg-gray-900 text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2 mt-auto text-sm">
+            <span className="font-space-grotesk">Start Learning</span>
             <ArrowRight
-              size={20}
-              className="group-hover:translate-x-2 transition-transform duration-300 relative z-10"
+              size={16}
+              className="group-hover:translate-x-1 transition-transform duration-200"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           </button>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-500/10 to-transparent rounded-full transform -translate-x-12 translate-y-12 group-hover:scale-125 transition-transform duration-700"></div>
       </div>
     </Link>
   );
