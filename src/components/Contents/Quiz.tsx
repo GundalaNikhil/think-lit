@@ -1,5 +1,5 @@
 "use client";
-import { CheckCircle, RotateCcw } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 interface QuizData {
   id: string;

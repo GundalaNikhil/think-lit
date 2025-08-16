@@ -4,13 +4,12 @@ import React from "react";
 import TopicContent from "../../../components/Contents/TopicContent";
 
 interface TopicPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-const TopicPage = ({ params }: TopicPageProps) => {
-  return <TopicContent slug={params.slug} />;
-};
-
-export default TopicPage;
+export default async function TopicPage({ params }: TopicPageProps) {
+  const { slug } = await params;
+  return <TopicContent slug={slug} />;
+}

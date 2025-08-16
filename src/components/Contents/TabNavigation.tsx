@@ -12,7 +12,6 @@ interface TabNavigationProps {
 const TabNavigation: React.FC<TabNavigationProps> = ({
   activeTab,
   setActiveTab,
-  difficultyColors,
 }) => {
   const tabs = [
     {

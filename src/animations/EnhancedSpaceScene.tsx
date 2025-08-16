@@ -1,18 +1,18 @@
 "use client";
-import { OrbitControls, Stars, Sphere, useTexture } from "@react-three/drei";
+import { OrbitControls, Stars, Sphere } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
 
 // Realistic Planet Component
-const Planet = ({ 
-  position, 
-  size, 
-  color, 
-  orbitRadius, 
-  orbitSpeed, 
+const Planet = ({
+  position,
+  size,
+  color,
+  orbitRadius,
+  orbitSpeed,
   rotationSpeed,
-  hasRings = false 
+  hasRings = false,
 }: {
   position: [number, number, number];
   size: number;
@@ -25,7 +25,7 @@ const Planet = ({
   const planetRef = useRef<THREE.Mesh>(null);
   const orbitRef = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (orbitRef.current) {
       orbitRef.current.rotation.y += orbitSpeed;
     }
@@ -66,7 +66,7 @@ const Planet = ({
 const AsteroidBelt = () => {
   const asteroids = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (asteroids.current) {
       asteroids.current.rotation.y += 0.001;
     }
@@ -80,7 +80,7 @@ const AsteroidBelt = () => {
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
         const y = (Math.random() - 0.5) * 2;
-        
+
         return (
           <Sphere
             key={i}
@@ -104,9 +104,10 @@ const NebulaEffect = () => {
   const nebulaRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (nebulaRef.current) {
+    if (nebulaRef.current && nebulaRef.current.material) {
       nebulaRef.current.rotation.z += 0.0005;
-      nebulaRef.current.material.opacity = 0.1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
+      const material = nebulaRef.current.material as THREE.MeshBasicMaterial;
+      material.opacity = 0.1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
     }
   });
 
@@ -150,7 +151,11 @@ const EnhancedSpaceScene = () => {
           <ambientLight intensity={0.2} color="#1a1a2e" />
           <pointLight position={[0, 0, 0]} intensity={2} color="#ffd700" />
           <pointLight position={[30, 10, 10]} intensity={0.5} color="#ff6b6b" />
-          <pointLight position={[-30, -10, -10]} intensity={0.3} color="#4ecdc4" />
+          <pointLight
+            position={[-30, -10, -10]}
+            intensity={0.3}
+            color="#4ecdc4"
+          />
 
           {/* Solar System Planets */}
           <Planet
@@ -161,7 +166,7 @@ const EnhancedSpaceScene = () => {
             orbitSpeed={0.02}
             rotationSpeed={0.01}
           />
-          
+
           <Planet
             position={[0, 0, 0]}
             size={1.2}
@@ -170,7 +175,7 @@ const EnhancedSpaceScene = () => {
             orbitSpeed={0.015}
             rotationSpeed={0.008}
           />
-          
+
           <Planet
             position={[0, 0, 0]}
             size={1.5}
@@ -179,7 +184,7 @@ const EnhancedSpaceScene = () => {
             orbitSpeed={0.01}
             rotationSpeed={0.006}
           />
-          
+
           <Planet
             position={[0, 0, 0]}
             size={2.0}

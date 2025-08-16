@@ -8,18 +8,6 @@ import { LearningTopicsSection } from "@/components/HomePage/TopicSection/TopicS
 export default function HomePage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* Enhanced Space-Themed Fonts */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossOrigin="anonymous"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet"
-      />
-
       {/* Immersive Dark Space Background */}
       <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-purple-900 z-0" />
 

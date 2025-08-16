@@ -79,7 +79,7 @@ const TopicQuiz: React.FC<TopicQuizProps> = ({
 
       {/* Quiz Questions */}
       {getComponentsByType("shared.quiz").map(
-        (quiz, index) =>
+        (quiz) =>
           quiz.question &&
           quiz.options &&
           quiz.correct_answer && (

@@ -1,6 +1,6 @@
 "use client";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
-import { formatDate, getDifficultyColor } from "../helpers/strapiHelper";
+// import { formatDate, getDifficultyColor } from "../helpers/strapiHelper"; // Commented out unused imports
 
 interface TopicData {
   title: string;

@@ -141,7 +141,7 @@ export const LearningTopicsSection = () => {
               className="text-3xl font-bold text-white mb-6"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
-              Technologies & Skills You'll Master
+              Technologies & Skills You&apos;ll Master
             </h4>
             <p
               className="text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8"

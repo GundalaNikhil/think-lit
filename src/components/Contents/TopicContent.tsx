@@ -46,18 +46,6 @@ interface TopicData {
   }>;
 }
 
-// Generic component type for flexibility
-type ComponentType = {
-  __component: string;
-  id: string;
-  code?: string;
-  animation_code?: string;
-  question?: string;
-  options?: string[];
-  correct_answer?: string;
-  explanation?: string;
-};
-
 interface TopicContentProps {
   slug?: string;
 }

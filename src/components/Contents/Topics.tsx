@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BookOpen, Loader2, ArrowRight, Search, Filter } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { BookOpen, Loader2, Search, Filter } from "lucide-react";
 import TopicCard from "./TopicCard";
-import Link from "next/link";
 
 interface Topic {
   id: number;
@@ -45,10 +44,6 @@ const Topics = () => {
     fetchTopics();
   }, []);
 
-  useEffect(() => {
-    filterTopics();
-  }, [topics, searchQuery, selectedDifficulty]);
-
   const fetchTopics = async () => {
     try {
       setLoading(true);
@@ -72,7 +67,7 @@ const Topics = () => {
     }
   };
 
-  const filterTopics = () => {
+  const filterTopics = useCallback(() => {
     let filtered = topics;
 
     if (searchQuery) {
@@ -92,7 +87,11 @@ const Topics = () => {
     }
 
     setFilteredTopics(filtered);
-  };
+  }, [topics, searchQuery, selectedDifficulty]);
+
+  useEffect(() => {
+    filterTopics();
+  }, [filterTopics]);
 
   const getDifficultyStats = () => {
     const stats = topics.reduce((acc, topic) => {
@@ -194,7 +193,7 @@ const Topics = () => {
               Learning Topics
             </h1>
           </div>
-          <h2 className="text-5xl font-black text-gray-900 mb-6 font-['Space_Grotesk'] bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-black mb-6 font-['Space_Grotesk'] bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             Master Programming Concepts
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 font-['Inter'] leading-relaxed">

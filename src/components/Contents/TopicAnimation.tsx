@@ -35,7 +35,7 @@ const TopicAnimation: React.FC<TopicAnimationProps> = ({
 
       {/* Animation Blocks */}
       {getComponentsByType("shared.animation-block").map(
-        (component, index) =>
+        (component) =>
           component.animation_code && (
             <div key={`${component.id}-${animationKey}`} className="mb-12">
               <AnimationBlock animationCode={component.animation_code} />

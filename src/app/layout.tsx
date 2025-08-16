@@ -1,4 +1,23 @@
 import "./globals.css";
+import { Space_Grotesk, Inter, Space_Mono } from "next/font/google";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+});
 
 export default function RootLayout({
   children,
@@ -7,7 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body
+        className={`${spaceGrotesk.variable} ${inter.variable} ${spaceMono.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

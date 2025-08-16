@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+/* Font Variables */
+:root {
+  --font-space-grotesk: var(--font-space-grotesk);
+  --font-inter: var(--font-inter);
+  --font-space-mono: var(--font-space-mono);
+}

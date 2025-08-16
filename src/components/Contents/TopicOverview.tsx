@@ -1,5 +1,6 @@
 "use client";
 import { BookOpen } from "lucide-react";
+import Image from "next/image";
 import ContentRenderer from "./ContentRenderer";
 import CodeExample from "./CodeExample";
 
@@ -73,10 +74,11 @@ const TopicOverview: React.FC<TopicOverviewProps> = ({
       {/* Hero Image */}
       {topicData.image && topicData.image.length > 0 && (
         <div className="relative h-96 md:h-[500px] overflow-hidden rounded-3xl mb-16 shadow-2xl hover-lift animate-fadeInUp">
-          <img
+          <Image
             src={`http://localhost:1337${topicData.image[0].url}`}
             alt={topicData.image[0].alternativeText || topicData.title}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
           <div className="absolute bottom-8 left-8 text-white">
@@ -113,7 +115,7 @@ const TopicOverview: React.FC<TopicOverviewProps> = ({
       {/* Code Examples Section */}
       <div className="mb-16">
         <div className="text-center mb-12 animate-fadeInUp">
-          <h3 className="text-4xl font-black font-['Space_Grotesk'] text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+          <h3 className="text-4xl font-black font-['Space_Grotesk'] mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
             Code Examples
           </h3>
           <p className="text-xl text-gray-600 font-['Inter']">

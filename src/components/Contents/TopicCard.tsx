@@ -124,12 +124,13 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
         <div className="relative h-48 overflow-hidden">
           {image && image.length > 0 ? (
             <>
-              <img
+              <Image
                 src={`http://localhost:1337${
                   image[0].formats?.medium?.url || image[0].url
                 }`}
                 alt={image[0].alternativeText || title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:from-black/60 transition-all duration-500"></div>
             </>
