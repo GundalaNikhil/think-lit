@@ -1,13 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { words } from "../components/constants/AnimationConstants";
 
-export const TypewriterAnimation = () => {
+export const TypewriterAnimation: React.FC = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-
-  const words = ["Innovate", "Create", "Excel", "Learn", "Build", "Grow"];
 
   useEffect(() => {
     const currentWord = words[currentWordIndex];
@@ -39,13 +38,16 @@ export const TypewriterAnimation = () => {
     );
 
     return () => clearTimeout(timeout);
-  }, [currentText, isDeleting, isPaused, currentWordIndex, words]);
+  }, [currentText, isDeleting, isPaused, currentWordIndex]);
 
   return (
-    <div className="flex items-center justify-center">
-      <span className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+    <div className="flex items-center justify-center min-h-[120px]">
+      <span
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg"
+        style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
+      >
         {currentText}
-        <span className="animate-pulse">|</span>
+        <span className="animate-pulse text-orange-400">|</span>
       </span>
     </div>
   );
