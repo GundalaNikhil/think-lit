@@ -2,32 +2,12 @@ import { Eye, FileText, HelpCircle, Target } from "lucide-react";
 
 export const navItems = [
   {
-    name: "Home",
-    href: "/",
-  },
-  {
     name: "Learn",
     href: "/learn",
   },
   {
-    name: "About",
-    href: "/about",
-  },
-  {
     name: "Why Us",
     href: "/why-us",
-  },
-  {
-    name: "Contact",
-    href: "/contact",
-  },
-  {
-    name: "Login",
-    href: "/login",
-  },
-  {
-    name: "Signup",
-    href: "/signup",
   },
 ];
 

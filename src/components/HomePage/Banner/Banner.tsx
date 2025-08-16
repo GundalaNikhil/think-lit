@@ -1,91 +1,116 @@
-import GlassCard from "@/animations/GlassCard";
-import SpaceScene from "@/animations/SpaceScene";
+"use client";
+// import GlassCard from "@/animations/GlassCard"; // Commented out for future glassmorphism usage
+// import GlassmorphismCard from "@/components/ui/GlassmorphismCard"; // Reusable glassmorphism component
+import EnhancedSpaceScene from "@/animations/EnhancedSpaceScene";
 import { TypewriterAnimation } from "@/animations/TypewriterAnimation";
-import { ArrowRight, BookOpen, Eye, HelpCircle, Play } from "lucide-react";
+import { ArrowRight, BookOpen, Play, Code } from "lucide-react";
 
 export const BannerSection = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* 3D Space Background */}
+      {/* Enhanced 3D Space Background */}
       <div className="absolute inset-0">
-        <SpaceScene />
+        <EnhancedSpaceScene />
       </div>
 
-      {/* Glass overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-purple-900/20 z-[1]" />
+      {/* Immersive Dark Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/30 z-[1]" />
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <GlassCard className="p-8 sm:p-12 bg-white/5 border-white/10">
-          <div className="space-y-8">
-            <div className="space-y-6">
+      {/* Enhanced Content with SEO Keywords */}
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="p-8 sm:p-12 rounded-3xl shadow-2xl transition-all duration-500">
+          <div className="space-y-10">
+            <div className="space-y-10">
               <h1
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-4 drop-shadow-2xl"
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-8 drop-shadow-2xl tracking-tight"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 ThinkLIT
               </h1>
-              <div className="h-20 sm:h-24 md:h-32 flex items-center justify-center">
+
+              <div className="h-20 sm:h-24 md:h-28 flex items-center justify-center">
                 <TypewriterAnimation />
+              </div>
+
+              {/* Simple, Peaceful Description */}
+              <div className="space-y-6">
+                <p
+                  className="text-xl sm:text-2xl text-gray-100 max-w-3xl mx-auto leading-relaxed font-light"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  A thoughtful space for learning programming concepts,
+                  practicing problem-solving, and growing as a developer.
+                </p>
+
+                <p
+                  className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  Learn at your own pace through clear explanations, interactive
+                  examples, and supportive guidance.
+                </p>
               </div>
             </div>
 
-            <p
-              className="text-base sm:text-lg md:text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed px-4"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Master technology through comprehensive articles, interactive
-              quizzes, tricky interview questions, and visual animations. Your
-              journey to technical excellence starts here. 🚀
-            </p>
+            {/* Simple Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+              <button
+                className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base font-semibold flex items-center gap-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                Start Learning
+                <ArrowRight
+                  className="group-hover:translate-x-1 transition-transform duration-300"
+                  size={18}
+                />
+              </button>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-              <GlassCard className="bg-gradient-to-r from-orange-500/30 to-red-600/30 hover:from-orange-500/40 hover:to-red-600/40 transition-all duration-300 hover:scale-105">
-                <button
-                  className="group text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center gap-2 min-w-[200px] justify-center"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  Explore Articles
-                  <ArrowRight
-                    className="group-hover:translate-x-1 transition-transform"
-                    size={20}
-                  />
-                </button>
-              </GlassCard>
-
-              <GlassCard className="bg-white/10 hover:bg-white/15 transition-all duration-300 hover:scale-105 border-orange-500/30">
-                <button
-                  className="group text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center gap-2 min-w-[200px] justify-center"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  <Play size={20} />
-                  See Demo
-                </button>
-              </GlassCard>
+              <button
+                className="group text-white border-2 border-white/30 hover:border-white/50 px-8 py-3 text-base font-semibold flex items-center gap-2 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-white/10"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                <Play size={18} />
+                Explore Topics
+              </button>
             </div>
           </div>
-        </GlassCard>
+        </div>
       </div>
 
-      {/* Floating Glass Elements */}
-      <div className="absolute top-16 sm:top-20 left-4 sm:left-10 opacity-60">
-        <GlassCard className="p-3 bg-orange-500/20">
-          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400 animate-bounce" />
-        </GlassCard>
+      {/* Subtle Floating Elements */}
+      <div className="absolute top-32 left-8 opacity-60 animate-float">
+        <div className="p-3 bg-blue-500/60 rounded-xl shadow-lg transition-all duration-500 hover:opacity-80">
+          <Code className="w-6 h-6 text-white/90" />
+        </div>
       </div>
-      <div className="absolute top-32 sm:top-40 right-8 sm:right-20 opacity-60">
-        <GlassCard className="p-3 bg-red-500/20">
-          <HelpCircle className="w-8 h-8 sm:w-10 sm:h-10 text-red-400 animate-pulse" />
-        </GlassCard>
+
+      <div
+        className="absolute bottom-32 right-8 opacity-60 animate-float"
+        style={{ animationDelay: "2s" }}
+      >
+        <div className="p-3 bg-purple-500/60 rounded-xl shadow-lg transition-all duration-500 hover:opacity-80">
+          <BookOpen className="w-6 h-6 text-white/90" />
+        </div>
       </div>
-      <div className="absolute bottom-32 sm:bottom-40 left-8 sm:left-20 opacity-60">
-        <GlassCard className="p-3 bg-pink-500/20">
-          <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400 animate-bounce delay-1000" />
-        </GlassCard>
-      </div>
+
+      {/* CSS Animation for floating effect */}
+      <style jsx>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(5deg);
+          }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 };
