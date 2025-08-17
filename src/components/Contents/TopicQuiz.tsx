@@ -35,11 +35,11 @@ const TopicQuiz: React.FC<TopicQuizProps> = ({
   onResetQuiz,
 }) => {
   return (
-    <div className="p-16">
-      <div className="text-center mb-16 animate-fadeInUp">
-        <div className="inline-flex items-center gap-4 bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-2xl shadow-lg mb-8">
-          <Target size={32} />
-          <h2 className="text-3xl font-black font-['Space_Grotesk']">
+    <div className="px-6 py-8">
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <Target size={24} className="text-gray-700" />
+          <h2 className="text-2xl font-space-grotesk font-bold text-gray-900">
             Knowledge Challenge
           </h2>
         </div>

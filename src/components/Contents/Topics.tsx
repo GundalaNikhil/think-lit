@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { BookOpen, Loader2, Search, Filter } from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { BookOpen, Loader2, Code, Zap, Trophy, Grid3x3 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import TopicCard from "./TopicCard";
+import TopicsLayout from "../Navigation/TopicsLayout";
 
 interface Topic {
   id: number;
@@ -31,6 +33,71 @@ interface Topic {
     };
   }>;
 }
+
+// Animated Counter Component
+const AnimatedCounter: React.FC<{
+  value: number;
+  delay?: number;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  label: string;
+}> = ({ value, delay = 0, icon: Icon, label }) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (hasAnimated) return;
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setCount(value);
+      setHasAnimated(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setHasAnimated(true);
+      const duration = 1500; // 1.5 seconds
+      const steps = 30;
+      const increment = value / steps;
+      let current = 0;
+
+      const counter = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setCount(value);
+          clearInterval(counter);
+        } else {
+          setCount(Math.floor(current));
+        }
+      }, duration / steps);
+
+      return () => clearInterval(counter);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay, hasAnimated]);
+
+  return (
+    <motion.div
+      className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-lg p-3 text-center shadow-lg"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: delay / 1000 }}
+    >
+      <div className="flex items-center justify-center mb-1">
+        <Icon size={18} className="text-orange-400 mr-2" />
+        <div className="text-xl font-bold text-orange-400">{count}</div>
+      </div>
+      <div className="text-xs font-space-grotesk font-medium text-gray-300">
+        {label}
+      </div>
+    </motion.div>
+  );
+};
 
 const Topics = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -70,14 +137,17 @@ const Topics = () => {
   const filterTopics = useCallback(() => {
     let filtered = topics;
 
-    if (searchQuery) {
+    // Case-insensitive search in title and tags
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(
         (topic) =>
-          topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          topic.tags?.toLowerCase().includes(searchQuery.toLowerCase())
+          topic.title.toLowerCase().includes(query) ||
+          topic.tags?.toLowerCase().includes(query)
       );
     }
 
+    // Filter by difficulty level
     if (selectedDifficulty !== "all") {
       filtered = filtered.filter(
         (topic) =>
@@ -88,6 +158,12 @@ const Topics = () => {
 
     setFilteredTopics(filtered);
   }, [topics, searchQuery, selectedDifficulty]);
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedDifficulty("all");
+  };
 
   useEffect(() => {
     filterTopics();
@@ -104,12 +180,26 @@ const Topics = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-6 bg-white/90 backdrop-blur-xl rounded-3xl p-16 shadow-2xl border border-white/50">
-          <Loader2 className="w-16 h-16 animate-spin text-blue-600" />
-          <p className="text-gray-600 text-xl font-['Inter']">
-            Loading amazing topics...
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative overflow-hidden">
+        {/* Animated stars background */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
+          <div
+            className="absolute top-1/3 right-1/3 w-0.5 h-0.5 bg-amber-300 rounded-full animate-pulse"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-orange-500 rounded-full animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 right-1/4 w-0.5 h-0.5 bg-amber-400 rounded-full animate-pulse"
+            style={{ animationDelay: "0.5s" }}
+          ></div>
+        </div>
+        <div className="flex flex-col items-center gap-4 bg-slate-700/60 backdrop-blur-sm rounded-lg p-8 border border-orange-400/20 shadow-xl">
+          <Loader2 className="w-8 h-8 animate-spin text-orange-400" />
+          <p className="text-slate-200 font-inter">Loading topics...</p>
         </div>
       </div>
     );
@@ -117,17 +207,27 @@ const Topics = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 flex items-center justify-center">
-        <div className="text-center bg-white/90 backdrop-blur-xl rounded-3xl p-16 shadow-2xl border border-white/50">
-          <div className="text-8xl mb-6">😕</div>
-          <p className="text-red-600 mb-6 text-xl font-['Inter']">
-            Oops! {error}
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center relative overflow-hidden">
+        {/* Animated stars background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
+          <div
+            className="absolute top-1/3 right-1/3 w-0.5 h-0.5 bg-amber-300 rounded-full animate-pulse"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-orange-500 rounded-full animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+        </div>
+        <div className="text-center bg-gray-800/60 backdrop-blur-sm rounded-lg p-8 border border-orange-400/20 shadow-xl">
+          <div className="text-4xl mb-4">👻</div>
+          <p className="text-gray-200 mb-6 font-inter">Oops! {error}</p>
           <button
             onClick={fetchTopics}
-            className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-2xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 font-['Space_Grotesk'] font-bold transform hover:scale-105 shadow-xl"
+            className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 transition-colors font-space-grotesk font-medium text-sm shadow-lg"
           >
-            Try Again 🔄
+            Try Again
           </button>
         </div>
       </div>
@@ -137,8 +237,39 @@ const Topics = () => {
   const difficultyStats = getDifficultyStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <style>{`
+    <TopicsLayout
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      selectedDifficulty={selectedDifficulty}
+      onDifficultyChange={setSelectedDifficulty}
+      onClearFilters={clearFilters}
+    >
+      <div className="relative overflow-hidden">
+        {/* Animated stars background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 left-10 w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
+          <div
+            className="absolute top-20 right-20 w-0.5 h-0.5 bg-amber-300 rounded-full animate-pulse"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-40 left-1/4 w-1 h-1 bg-orange-500 rounded-full animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute top-60 right-1/3 w-0.5 h-0.5 bg-amber-400 rounded-full animate-pulse"
+            style={{ animationDelay: "0.5s" }}
+          ></div>
+          <div
+            className="absolute bottom-40 left-1/3 w-1 h-1 bg-orange-300 rounded-full animate-pulse"
+            style={{ animationDelay: "3s" }}
+          ></div>
+          <div
+            className="absolute bottom-20 right-1/4 w-0.5 h-0.5 bg-amber-500 rounded-full animate-pulse"
+            style={{ animationDelay: "1.5s" }}
+          ></div>
+        </div>
+        <style>{`
         .animate-fadeInUp {
           animation: fadeInUp 0.8s ease-out forwards;
         }
@@ -184,156 +315,149 @@ const Topics = () => {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header Section */}
-        <div className="text-center mb-16 animate-fadeInUp">
-          <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl shadow-lg mb-8 animate-bounce-gentle">
-            <BookOpen size={32} />
-            <h1 className="text-3xl font-black font-['Space_Grotesk']">
-              Learning Topics
-            </h1>
-          </div>
-          <h2 className="text-5xl font-black mb-6 font-['Space_Grotesk'] bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Master Programming Concepts
-          </h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 font-['Inter'] leading-relaxed">
-            Explore our comprehensive collection of programming topics. Each
-            topic includes detailed articles, interactive content, quizzes, and
-            practical examples to accelerate your learning journey.
-          </p>
+        <div className="max-w-6xl mx-auto px-4 lg:px-8 lg:ml-8 py-4 lg:py-6 relative z-10">
+          {/* Header Section */}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <BookOpen size={24} className="text-orange-400" />
+              </motion.div>
+              <h1 className="text-3xl font-space-grotesk font-bold text-white">
+                Learning Topics
+              </h1>
+            </div>
+            <h2 className="text-2xl font-space-grotesk font-semibold mb-4 text-orange-300">
+              Master Programming Concepts
+            </h2>
+            <p className="text-gray-300 max-w-3xl font-inter leading-relaxed">
+              Explore our comprehensive collection of programming topics. Each
+              topic includes detailed articles, interactive content, quizzes,
+              and practical examples to accelerate your learning journey.
+            </p>
+          </motion.div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-blue-600 mb-2">
-                {topics.length}
-              </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
-                Total Topics
-              </div>
-            </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-green-600 mb-2">
-                {difficultyStats.beginner || 0}
-              </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
-                Beginner
-              </div>
-            </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-yellow-600 mb-2">
-                {difficultyStats.intermediate || 0}
-              </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
-                Intermediate
-              </div>
-            </div>
-            <div className="glass-effect rounded-2xl p-6 text-center">
-              <div className="text-3xl font-black text-red-600 mb-2">
-                {difficultyStats.advanced || 0}
-              </div>
-              <div className="text-sm font-['Space_Grotesk'] font-bold text-gray-700">
-                Advanced
-              </div>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4 mb-6 max-w-3xl lg:max-w-4xl">
+            <AnimatedCounter
+              value={topics.length}
+              delay={0}
+              icon={Grid3x3}
+              label="Total Topics"
+            />
+            <AnimatedCounter
+              value={difficultyStats.beginner || 0}
+              delay={200}
+              icon={Zap}
+              label="Beginner"
+            />
+            <AnimatedCounter
+              value={difficultyStats.intermediate || 0}
+              delay={400}
+              icon={Code}
+              label="Intermediate"
+            />
+            <AnimatedCounter
+              value={difficultyStats.advanced || 0}
+              delay={600}
+              icon={Trophy}
+              label="Advanced"
+            />
           </div>
         </div>
 
-        {/* Search and Filter Section */}
-        <div className="mb-12 glass-effect rounded-3xl p-8 shadow-xl animate-slideInLeft">
-          <div className="flex flex-col md:flex-row gap-6 items-center">
-            <div className="flex-1 relative">
-              <Search
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <input
-                type="text"
-                placeholder="Search topics by title or tags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 font-['Inter'] text-lg"
-              />
-            </div>
-
-            <div className="flex items-center gap-3">
-              <Filter size={20} className="text-gray-600" />
-              <select
-                value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="px-6 py-4 rounded-2xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 font-['Space_Grotesk'] font-bold bg-white"
-              >
-                <option value="all">All Levels</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 font-['Inter']">
-              Showing{" "}
-              <span className="font-bold text-blue-600">
-                {filteredTopics.length}
-              </span>{" "}
-              of <span className="font-bold">{topics.length}</span> topics
-            </p>
-          </div>
-        </div>
+        {/* Results Summary */}
+        <motion.div
+          className="mb-6 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          <p className="text-gray-400 font-inter text-sm">
+            Showing{" "}
+            <span className="font-semibold text-orange-400">
+              {filteredTopics.length}
+            </span>{" "}
+            of <span className="font-semibold text-white">{topics.length}</span>{" "}
+            topics
+          </p>
+        </motion.div>
 
         {/* Topics Grid */}
         {filteredTopics.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {filteredTopics.map((topic, index) => (
-              <div
-                key={topic.id}
-                className="animate-fadeInUp"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <TopicCard topic={topic} />
-              </div>
-            ))}
-          </div>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 mb-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <AnimatePresence>
+              {filteredTopics.map((topic, index) => (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  whileHover={{
+                    y: -5,
+                    transition: { duration: 0.2 },
+                  }}
+                  className="h-full"
+                >
+                  <TopicCard topic={topic} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         ) : (
-          <div className="text-center py-16 animate-fadeInUp">
-            <div className="text-8xl mb-6">🔍</div>
-            <h3 className="text-3xl font-bold text-gray-600 mb-4 font-['Space_Grotesk']">
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">👻</div>
+            <h3 className="text-xl font-semibold text-white mb-2 font-space-grotesk">
               No topics found
             </h3>
-            <p className="text-gray-500 mb-8 font-['Inter'] text-lg">
+            <p className="text-gray-400 mb-6 font-inter">
               Try adjusting your search or filter criteria
             </p>
             <button
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedDifficulty("all");
-              }}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 font-['Space_Grotesk'] font-bold transform hover:scale-105 shadow-xl"
+              onClick={clearFilters}
+              className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 transition-colors font-space-grotesk font-medium text-sm shadow-lg"
             >
-              Clear Filters 🔄
+              Clear Filters
             </button>
           </div>
         )}
 
         {/* Quick Navigation */}
         {filteredTopics.length > 0 && (
-          <div className="text-center mt-16 animate-fadeInUp">
-            <div className="glass-effect rounded-3xl p-8 inline-block">
-              <h4 className="text-2xl font-bold text-gray-900 mb-4 font-['Space_Grotesk']">
+          <div className="text-center mt-8 pt-6 border-t border-gray-700/50">
+            <div className="bg-gray-800/40 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 shadow-lg inline-block">
+              <h4 className="text-lg font-semibold text-white mb-2 font-space-grotesk">
                 Ready to start learning?
               </h4>
-              <p className="text-gray-600 mb-6 font-['Inter']">
+              <p className="text-gray-300 mb-4 font-inter text-sm">
                 Choose any topic above and begin your programming journey!
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+              <div className="flex flex-wrap justify-center gap-2">
+                <button className="bg-orange-600 text-white px-3 py-1.5 rounded-md hover:bg-orange-700 transition-colors font-space-grotesk font-medium text-xs shadow-lg">
                   Start with Basics
                 </button>
-                <button className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+                <button className="bg-amber-600 text-white px-3 py-1.5 rounded-md hover:bg-amber-700 transition-colors font-space-grotesk font-medium text-xs shadow-lg">
                   Intermediate Level
                 </button>
-                <button className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 font-['Space_Grotesk'] font-bold">
+                <button className="bg-gray-600 text-white px-3 py-1.5 rounded-md hover:bg-gray-700 transition-colors font-space-grotesk font-medium text-xs shadow-lg">
                   Advanced Topics
                 </button>
               </div>
@@ -341,7 +465,7 @@ const Topics = () => {
           </div>
         )}
       </div>
-    </div>
+    </TopicsLayout>
   );
 };
 

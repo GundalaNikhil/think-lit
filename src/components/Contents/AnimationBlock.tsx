@@ -1,85 +1,196 @@
 "use client";
-import { useState, useCallback } from "react";
-import { Play, RotateCcw, Eye, EyeOff } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Play, RotateCcw, AlertTriangle } from "lucide-react";
 
 interface AnimationBlockProps {
   animationCode: string;
 }
 
 const AnimationBlock: React.FC<AnimationBlockProps> = ({ animationCode }) => {
-  const [showAnimation, setShowAnimation] = useState(false);
   const [animationKey, setAnimationKey] = useState(0);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const animationRef = useRef<HTMLDivElement>(null);
 
   const resetAnimation = useCallback(() => {
     setAnimationKey((prev) => prev + 1);
+    setHasError(false);
+    setErrorMessage("");
   }, []);
 
-  const toggleAnimation = useCallback(() => {
-    setShowAnimation((prev) => !prev);
-    if (!showAnimation) {
-      setAnimationKey((prev) => prev + 1);
+  // Auto-render animation with proper isolation
+  useEffect(() => {
+    if (!animationRef.current) {
+      return;
     }
-  }, [showAnimation]);
+
+    try {
+      const container = animationRef.current;
+
+      // Clear previous content safely
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+
+      if (animationCode) {
+        // Create isolated iframe for animation rendering
+        const iframe = document.createElement("iframe");
+        iframe.style.width = "100%";
+        iframe.style.height = "1200px";
+        iframe.style.border = "none";
+        iframe.style.borderRadius = "8px";
+        iframe.sandbox = "allow-scripts allow-same-origin";
+
+        // Set up iframe content
+        iframe.onload = () => {
+          try {
+            const iframeDoc =
+              iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDoc) {
+              iframeDoc.open();
+              iframeDoc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                  <style>
+                    body {
+                      margin: 0;
+                      padding: 32px;
+                      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                      background: #ffffff;
+                      min-height: 100vh;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    }
+                    .animation-container {
+                      background: #ffffff;
+                      border-radius: 12px;
+                      padding: 40px;
+                      box-shadow:
+                        0 1px 3px rgba(0, 0, 0, 0.1),
+                        0 1px 2px rgba(0, 0, 0, 0.06);
+                      max-width: 100%;
+                      overflow: hidden;
+                      border: 1px solid #e5e7eb;
+                      position: relative;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="animation-container">
+                    ${animationCode}
+                  </div>
+                </body>
+                </html>
+              `);
+              iframeDoc.close();
+            }
+          } catch (iframeError) {
+            console.error("Iframe rendering error:", iframeError);
+            setHasError(true);
+            setErrorMessage("Failed to render animation in secure container");
+          }
+        };
+
+        container.appendChild(iframe);
+      }
+    } catch (error) {
+      console.error("Animation rendering error:", error);
+      setHasError(true);
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+    }
+  }, [animationCode, animationKey]);
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 border-2 border-purple-200 rounded-3xl p-10 shadow-2xl mb-12 hover:shadow-3xl transition-all duration-500 animate-fadeInUp hover:scale-[1.01]">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl shadow-lg">
-          <Play size={28} />
-          <h3 className="text-2xl font-black font-['Space_Grotesk']">
+    <div className="animation-block bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-8 hover:shadow-md transition-all duration-300 relative">
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center gap-3 bg-black text-white px-6 py-3 rounded-md shadow-sm">
+          <Play size={20} />
+          <h3 className="text-lg font-semibold font-space-grotesk">
             Interactive Visualization
           </h3>
         </div>
       </div>
 
-      <div className="flex justify-center gap-4 mb-8">
-        {showAnimation && (
-          <button
-            onClick={resetAnimation}
-            className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 font-['Space_Grotesk'] font-bold flex items-center gap-3 transform hover:scale-105 shadow-lg"
-          >
-            <RotateCcw size={20} />
-            Reset Animation
-          </button>
-        )}
+      {/* Always visible reset button */}
+      <div className="flex justify-center mb-6">
         <button
-          onClick={toggleAnimation}
-          className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-pink-600 hover:to-purple-600 transition-all duration-500 font-['Space_Grotesk'] font-black text-lg transform hover:scale-110 shadow-2xl flex items-center gap-3"
+          onClick={resetAnimation}
+          className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors duration-200 font-space-grotesk font-medium flex items-center gap-2 text-sm"
         >
-          {showAnimation ? (
-            <>
-              <EyeOff size={24} />
-              Hide Visualization
-            </>
-          ) : (
-            <>
-              <Eye size={24} />
-              Show Visualization ✨
-            </>
-          )}
+          <RotateCcw size={16} />
+          Reset Animation
         </button>
       </div>
 
-      {showAnimation && (
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-purple-200 overflow-hidden shadow-2xl animate-fadeInUp">
+      {/* Error Display */}
+      {hasError && (
+        <div className="bg-gray-50 border border-gray-300 rounded-md p-4 mb-6">
+          <div className="flex items-center gap-2 text-gray-800 mb-2">
+            <AlertTriangle size={20} />
+            <h4 className="font-space-grotesk font-semibold">
+              Animation Error
+            </h4>
+          </div>
+          <p className="text-gray-600 font-inter text-sm">{errorMessage}</p>
+          <button
+            onClick={resetAnimation}
+            className="mt-3 bg-gray-900 text-white px-3 py-1.5 rounded-md hover:bg-gray-800 transition-colors font-space-grotesk font-medium text-sm"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {/* Animation Container - Always visible when animationCode exists */}
+      {!hasError && animationCode && (
+        <div className="bg-white border border-gray-300 rounded-md overflow-hidden shadow-sm mb-6">
           <div
+            ref={animationRef}
             key={animationKey}
-            dangerouslySetInnerHTML={{ __html: animationCode }}
-            className="w-full"
-            style={{ minHeight: "400px" }}
+            className="w-full min-h-[1200px] bg-white"
           />
 
-          <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4 border-t border-purple-200">
-            <div className="flex items-center justify-center gap-4 text-sm text-purple-700 font-['Inter']">
-              <span>🎬 Animation is running</span>
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-              <button
-                onClick={resetAnimation}
-                className="text-purple-600 hover:text-purple-800 transition-colors duration-200 underline"
-              >
-                Click to restart
-              </button>
+          <div className="bg-gray-50 p-3 border-t border-gray-200">
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-600 font-inter">
+              <span>Animation running in secure container</span>
+              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse"></div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fallback for no animation code */}
+      {!hasError && !animationCode && (
+        <div className="bg-gray-50 border border-gray-200 rounded-md p-6 text-center">
+          <div className="text-4xl mb-3">📊</div>
+          <h4 className="text-lg font-space-grotesk font-semibold text-gray-800 mb-2">
+            Demo Animation Preview
+          </h4>
+          <p className="text-gray-600 font-inter mb-4 text-sm">
+            This topic doesn&apos;t have custom animations yet, but here&apos;s
+            a preview of the animation system:
+          </p>
+          <div className="bg-white rounded-md p-4 border border-gray-200">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-3 h-3 bg-gray-800 rounded-full animate-bounce"></div>
+              <div
+                className="w-3 h-3 bg-gray-600 rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
+            <p className="text-gray-500 text-xs mt-3 font-inter">
+              Interactive animations appear here automatically when available
+            </p>
           </div>
         </div>
       )}

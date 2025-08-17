@@ -7,6 +7,8 @@ import TabNavigation from "./TabNavigation";
 import TopicOverview from "./TopicOverview";
 import TopicQuiz from "./TopicQuiz";
 import TopicAnimation from "./TopicAnimation";
+import SidebarLayout from "./SidebarLayout";
+import Navbar from "../Navigation/Navbar";
 
 interface TopicData {
   id: number;
@@ -71,6 +73,52 @@ const TopicContent: React.FC<TopicContentProps> = ({
 
   // Animation state management
   const [animationKey, setAnimationKey] = useState(0);
+
+  // Mock topics data for sidebar (in real app, this would come from API)
+  const mockTopics = [
+    {
+      id: "1",
+      title: "Introduction to Arrays",
+      slug: "introduction-to-arrays",
+      difficulty_level: "beginner",
+      completed: true,
+    },
+    {
+      id: "2",
+      title: "Array Methods",
+      slug: "array-methods",
+      difficulty_level: "beginner",
+      completed: true,
+    },
+    {
+      id: "3",
+      title: "React Hooks",
+      slug: "react-hooks",
+      difficulty_level: "intermediate",
+      completed: false,
+    },
+    {
+      id: "4",
+      title: "State Management",
+      slug: "state-management",
+      difficulty_level: "intermediate",
+      completed: false,
+    },
+    {
+      id: "5",
+      title: "Advanced Patterns",
+      slug: "advanced-patterns",
+      difficulty_level: "advanced",
+      completed: false,
+    },
+    {
+      id: "6",
+      title: "Performance Optimization",
+      slug: "performance-optimization",
+      difficulty_level: "advanced",
+      completed: false,
+    },
+  ];
 
   useEffect(() => {
     if (slug) {
@@ -165,16 +213,28 @@ const TopicContent: React.FC<TopicContentProps> = ({
     setAnimationKey((prev) => prev + 1);
   };
 
-  // Tab change handler
+  // Tab change handler with proper cleanup
   const handleTabChange = (tabName: string) => {
-    setActiveTab(tabName);
-
-    if (tabName === "animation") {
-      setAnimationKey((prev) => prev + 1);
+    // Prevent unnecessary re-renders
+    if (activeTab === tabName) {
+      return;
     }
 
-    if (tabName === "quiz") {
-      resetQuiz();
+    try {
+      // Force a small delay to ensure clean state transition
+      setTimeout(() => {
+        setActiveTab(tabName);
+
+        if (tabName === "animation") {
+          setAnimationKey((prev) => prev + 1);
+        }
+
+        if (tabName === "quiz") {
+          resetQuiz();
+        }
+      }, 50);
+    } catch (error) {
+      console.error("Error during tab switch:", error);
     }
   };
 
@@ -187,7 +247,9 @@ const TopicContent: React.FC<TopicContentProps> = ({
 
   // Render current tab content only
   const renderTabContent = () => {
-    if (!topicData) return null;
+    if (!topicData) {
+      return null;
+    }
 
     switch (activeTab) {
       case "overview":
@@ -267,88 +329,41 @@ const TopicContent: React.FC<TopicContentProps> = ({
   const difficultyColors = getDifficultyColor(topicData.difficulty_level);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      {/* Styles */}
-      <style>{`
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-        .animate-slideInRight {
-          animation: slideInRight 0.8s ease-out forwards;
-        }
-        .animate-glow {
-          animation: glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        @keyframes glow {
-          from {
-            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
-          }
-          to {
-            box-shadow: 0 0 30px rgba(147, 51, 234, 0.8);
-          }
-        }
-        .hover-lift {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hover-lift:hover {
-          transform: translateY(-5px) scale(1.02);
-        }
-        .glass-effect {
-          background: rgba(255, 255, 255, 0.25);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .text-shadow {
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-      `}</style>
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900">
+      <Navbar showSearch={false} />
+      <SidebarLayout currentTopicSlug={slug || ""} topics={mockTopics}>
+        <div className="min-h-screen bg-transparent">
+          {/* Header */}
+          <div className="border-b border-gray-200 bg-white">
+            <div className="max-w-5xl mx-auto">
+              <TopicHeader topicData={topicData} />
+            </div>
+          </div>
 
-      {/* Header */}
-      <TopicHeader topicData={topicData} onBack={() => window.history.back()} />
+          {/* Tab Navigation */}
+          <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+            <div className="max-w-5xl mx-auto">
+              <TabNavigation
+                activeTab={activeTab}
+                setActiveTab={handleTabChange}
+                difficultyColors={difficultyColors}
+              />
+            </div>
+          </div>
 
-      {/* Tab Navigation */}
-      <TabNavigation
-        activeTab={activeTab}
-        setActiveTab={handleTabChange}
-        difficultyColors={difficultyColors}
-      />
-
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="glass-effect rounded-3xl shadow-2xl overflow-hidden border border-white/30">
-          {renderTabContent()}
+          {/* Content */}
+          <div className="bg-white">
+            <div className="max-w-5xl mx-auto">
+              <div
+                key={`tab-${activeTab}-${animationKey}`}
+                className="min-h-[600px] tab-content tab-transition"
+              >
+                {renderTabContent()}
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Footer Navigation */}
-        <div className="mt-16 flex justify-center gap-6 animate-fadeInUp">
-          <button className="bg-white/90 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-2xl hover:bg-white transition-all duration-300 font-['Space_Grotesk'] font-bold shadow-xl hover:scale-105 border border-gray-200">
-            ← Previous Topic
-          </button>
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 font-['Space_Grotesk'] font-bold shadow-xl hover:scale-105">
-            Next Topic →
-          </button>
-        </div>
-      </div>
+      </SidebarLayout>
     </div>
   );
 };

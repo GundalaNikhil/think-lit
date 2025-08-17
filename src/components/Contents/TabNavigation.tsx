@@ -35,19 +35,23 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   ];
 
   return (
-    <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-2xl border-b border-gray-200/50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center space-x-2 py-6">
+    <div className="bg-white">
+      <div className="px-6">
+        <div className="flex justify-start space-x-1 py-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`relative px-8 py-4 rounded-2xl font-['Space_Grotesk'] font-bold text-lg transition-all duration-500 transform hover:scale-105 group ${
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveTab(tab.id);
+                }}
+                className={`relative px-4 py-2 rounded-md font-space-grotesk font-medium text-sm transition-all duration-200 ${
                   activeTab === tab.id
-                    ? `bg-gradient-to-r ${tab.color} text-white shadow-2xl scale-105`
-                    : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
               >
                 <div className="flex items-center gap-3">
