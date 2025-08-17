@@ -173,8 +173,8 @@ const AnimationBlock: React.FC<AnimationBlockProps> = ({ animationCode }) => {
             Demo Animation Preview
           </h4>
           <p className="text-gray-600 font-inter mb-4 text-sm">
-            This topic doesn't have custom animations yet, but here's a preview
-            of the animation system:
+            This topic doesn&apos;t have custom animations yet, but here&apos;s
+            a preview of the animation system:
           </p>
           <div className="bg-white rounded-md p-4 border border-gray-200">
             <div className="flex items-center justify-center space-x-3">

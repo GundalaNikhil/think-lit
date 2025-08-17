@@ -8,6 +8,7 @@ import TopicOverview from "./TopicOverview";
 import TopicQuiz from "./TopicQuiz";
 import TopicAnimation from "./TopicAnimation";
 import SidebarLayout from "./SidebarLayout";
+import Navbar from "../Navigation/Navbar";
 
 interface TopicData {
   id: number;
@@ -328,42 +329,42 @@ const TopicContent: React.FC<TopicContentProps> = ({
   const difficultyColors = getDifficultyColor(topicData.difficulty_level);
 
   return (
-    <SidebarLayout currentTopicSlug={slug || ""} topics={mockTopics}>
-      <div className="min-h-screen bg-white">
-        {/* Header */}
-        <div className="border-b border-gray-200 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <TopicHeader
-              topicData={topicData}
-              onBack={() => window.history.back()}
-            />
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900">
+      <Navbar showSearch={false} />
+      <SidebarLayout currentTopicSlug={slug || ""} topics={mockTopics}>
+        <div className="min-h-screen bg-transparent">
+          {/* Header */}
+          <div className="border-b border-gray-200 bg-white">
+            <div className="max-w-5xl mx-auto">
+              <TopicHeader topicData={topicData} />
+            </div>
           </div>
-        </div>
 
-        {/* Tab Navigation */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-          <div className="max-w-5xl mx-auto">
-            <TabNavigation
-              activeTab={activeTab}
-              setActiveTab={handleTabChange}
-              difficultyColors={difficultyColors}
-            />
+          {/* Tab Navigation */}
+          <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+            <div className="max-w-5xl mx-auto">
+              <TabNavigation
+                activeTab={activeTab}
+                setActiveTab={handleTabChange}
+                difficultyColors={difficultyColors}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className="bg-white">
-          <div className="max-w-5xl mx-auto">
-            <div
-              key={`tab-${activeTab}-${animationKey}`}
-              className="min-h-[600px] tab-content tab-transition"
-            >
-              {renderTabContent()}
+          {/* Content */}
+          <div className="bg-white">
+            <div className="max-w-5xl mx-auto">
+              <div
+                key={`tab-${activeTab}-${animationKey}`}
+                className="min-h-[600px] tab-content tab-transition"
+              >
+                {renderTabContent()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </SidebarLayout>
+      </SidebarLayout>
+    </div>
   );
 };
 

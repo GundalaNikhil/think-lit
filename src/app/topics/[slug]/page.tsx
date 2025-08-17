@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import TopicContent from "../../../components/Contents/TopicContent";
 

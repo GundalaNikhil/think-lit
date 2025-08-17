@@ -21,14 +21,9 @@ interface Topic {
 interface SidebarProps {
   currentTopicSlug: string;
   topics: Topic[];
-  onTopicSelect?: (slug: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  currentTopicSlug,
-  topics = [],
-  onTopicSelect,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentTopicSlug, topics = [] }) => {
   const currentIndex = topics.findIndex(
     (topic) => topic.slug === currentTopicSlug
   );

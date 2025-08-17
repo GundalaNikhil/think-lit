@@ -5,13 +5,17 @@ import { Bug, ChevronDown, ChevronUp } from "lucide-react";
 interface DebugInfoProps {
   activeTab: string;
   animationKey: number;
-  topicData: any;
+  topicData: Record<string, unknown> | null;
 }
 
-const DebugInfo: React.FC<DebugInfoProps> = ({ activeTab, animationKey, topicData }) => {
+const DebugInfo: React.FC<DebugInfoProps> = ({
+  activeTab,
+  animationKey,
+  topicData,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     return null;
   }
 
@@ -25,7 +29,7 @@ const DebugInfo: React.FC<DebugInfoProps> = ({ activeTab, animationKey, topicDat
         <span className="font-space-mono text-sm">Debug Info</span>
         {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
-      
+
       {isExpanded && (
         <div className="p-4 border-t border-white/20 font-space-mono text-xs">
           <div className="space-y-2">
@@ -40,17 +44,18 @@ const DebugInfo: React.FC<DebugInfoProps> = ({ activeTab, animationKey, topicDat
             <div>
               <span className="text-blue-300">Topic Data:</span>
               <span className="ml-2 text-green-300">
-                {topicData ? '✅ Loaded' : '❌ Missing'}
+                {topicData ? "✅ Loaded" : "❌ Missing"}
               </span>
             </div>
-            {topicData?.additional_content && (
+            {topicData?.additional_content &&
+            Array.isArray(topicData.additional_content) ? (
               <div>
                 <span className="text-blue-300">Additional Content:</span>
                 <span className="ml-2 text-green-300">
-                  {topicData.additional_content.length} items
+                  {(topicData.additional_content as unknown[]).length} items
                 </span>
               </div>
-            )}
+            ) : null}
             <div>
               <span className="text-blue-300">Timestamp:</span>
               <span className="ml-2 text-green-300">

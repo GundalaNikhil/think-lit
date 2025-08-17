@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Calendar, Tag } from "lucide-react";
+import { Calendar, Tag } from "lucide-react";
 // import { formatDate, getDifficultyColor } from "../helpers/strapiHelper"; // Commented out unused imports
 
 interface TopicData {
@@ -11,10 +11,9 @@ interface TopicData {
 
 interface TopicHeaderProps {
   topicData: TopicData;
-  onBack: () => void;
 }
 
-const TopicHeader: React.FC<TopicHeaderProps> = ({ topicData, onBack }) => {
+const TopicHeader: React.FC<TopicHeaderProps> = ({ topicData }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -22,21 +21,6 @@ const TopicHeader: React.FC<TopicHeaderProps> = ({ topicData, onBack }) => {
       day: "numeric",
     });
   };
-
-  const getDifficultyColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "beginner":
-        return { gradient: "from-green-500 to-emerald-500" };
-      case "intermediate":
-        return { gradient: "from-yellow-500 to-orange-500" };
-      case "advanced":
-        return { gradient: "from-red-500 to-pink-500" };
-      default:
-        return { gradient: "from-blue-500 to-purple-500" };
-    }
-  };
-
-  const difficultyColors = getDifficultyColor(topicData.difficulty_level);
 
   return (
     <div className="bg-white border-b border-gray-200">
